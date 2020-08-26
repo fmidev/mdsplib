@@ -1,3 +1,5 @@
+LIB = mdsplib
+
 # $Id$
 
 CC = gcc
@@ -9,10 +11,29 @@ CC = gcc
 CFLAGS = -g -O2 -fPIC
 #CFLAGS = -g -O0 -fPIC
 
+prosessor := $(shell uname -p)
+
+ifeq ($(origin PREFIX), undefined)
+  PREFIX = /usr
+else
+  PREFIX = $(PREFIX)
+endif
+
+ifeq ($(prosessor), x86_64)
+  libdir = $(PREFIX)/lib64
+else
+  libdir = $(PREFIX)/lib
+endif
+
+bindir = $(PREFIX)/bin
+includedir = $(PREFIX)/include
+
+
 LIBS = 
 
 library: libmetar.a
 
+release: all
 all: metar_test library
 
 libmetar.a: src/antoi.o src/charcmp.o src/decode_metar.o src/decode_metar_remark.o src/fracpart.o src/print_decoded_metar.o src/stspack2.o src/stspack3.o
@@ -49,16 +70,24 @@ src/stspack2.o: src/stspack2.c src/local.h
 src/stspack3.o: src/stspack3.c src/local.h
 	$(CC) $(CFLAGS) -c src/stspack3.c -o src/stspack3.o
 
-clean:
-	rm -f src/*.o metar_test libmetar.a
-
 install: library
-	cp include/metar.h /usr/local/include/
-	chmod 0644 /usr/local/include/metar.h
-	cp libmetar.a /usr/local/lib/
-	chmod 0644 /usr/local/lib/libmetar.a
-	ranlib /usr/local/lib/libmetar.a
+	mkdir -p $(includedir)
+	mkdir -p $(libdir)
+	install -m 0644 libmetar.a $(libdir)/
+	ranlib $(libdir)/libmetar.a
+	install -m 0644 include/metar.h $(includedir)
+	install -m 0644 src/metar_structs.h $(includedir)
+	install -m 0644 src/local.h $(includedir)/local.h
 
+rpm: clean
+	if [ -e $(LIB).spec ]; \
+	then \
+	  tar -czvf $(LIB).tar.gz --transform "s,^,$(LIB)/," * ; \
+	  rpmbuild -ta $(LIB).tar.gz ; \
+	  rm -f $(LIB).tar.gz ; \
+	else \
+	  echo $(LIB).spec file missing; \
+	fi;
 test:	metar_test
 	./metar_test
 
