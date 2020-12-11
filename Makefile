@@ -83,7 +83,7 @@ rpm: clean
 	if [ -e $(LIB).spec ]; \
 	then \
 	  tar -czvf $(LIB).tar.gz --transform "s,^,$(LIB)/," * ; \
-	  rpmbuild -ta $(LIB).tar.gz ; \
+	  rpmbuild -tb $(LIB).tar.gz ; \
 	  rm -f $(LIB).tar.gz ; \
 	else \
 	  echo $(LIB).spec file missing; \
