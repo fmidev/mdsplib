@@ -1259,7 +1259,7 @@ static MDSP_BOOL isVisibility( char **visblty, Decoded_METAR *Mptr,
       if( antoi(*visblty,
                   strlen(*visblty)) >= 50 &&
                antoi(*visblty,
-                  strlen(*visblty)) <= 500 &&
+                  strlen(*visblty)) <= 800 &&
               (antoi(*visblty,
                   strlen(*visblty)) % 50) == 0 )
       {
@@ -1270,24 +1270,11 @@ static MDSP_BOOL isVisibility( char **visblty, Decoded_METAR *Mptr,
          return TRUE;
       }
       else if( antoi(*visblty,
-                 strlen(*visblty)) >= 500 &&
-           antoi(*visblty,
-                 strlen(*visblty)) <= 3000 &&
-          (antoi(*visblty,
-                 strlen(*visblty)) % 100) == 0 )
-      {
-         Mptr->prevail_vsbyM =
-            (float) (antoi(*visblty,
-                      strlen(*visblty)));
-         (*NDEX)++;
-         return TRUE;
-      }
-      else if( antoi(*visblty,
-              strlen(*visblty)) >= 3000 &&
+              strlen(*visblty)) >= 800 &&
           antoi(*visblty,
               strlen(*visblty)) <= 5000 &&
           (antoi(*visblty,
-                  strlen(*visblty)) % 500) == 0 )
+                  strlen(*visblty)) % 100) == 0 )
       {
          Mptr->prevail_vsbyM =
                (float) (antoi(*visblty,
