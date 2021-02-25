@@ -1,7 +1,7 @@
 %define LIBNAME mdsplib
 Summary: mdsplib library
 Name: %{LIBNAME}
-Version: 20.8.26
+Version: 21.2.25
 Release: 1%{?dist}.fmi
 License: GNU
 Group: Development/Libraries
@@ -36,6 +36,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libmetar.a
 
 %changelog
+* Thu Feb 25 2021 Pertti Kinnia <pertti.kinnia@fmi.fi> - 21.2.25-1.fmi
+- Changed (loosened) visibility value ranges/precisions when parsing messages (QDTOOLS-94)
 * Wed Aug 26 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.8.26-1.fmi
 - Pulled latest version
 * Sat Apr  8 2017 Mika Heiskanen <mika.heiskanen@fmi.fi> - 16.4.8-1.fmi
