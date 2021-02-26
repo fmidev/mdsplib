@@ -1076,6 +1076,20 @@ static MDSP_BOOL isMBeforeVis( char **m, Decoded_METAR *Mptr,
 /*                 None.                                            */
 /*                                                                  */
 /********************************************************************/
+/*                                                                  */
+/* Round visibilty value to precision to accept values like 125     */
+/*                                                                  */
+/********************************************************************/
+/*                                                                  */
+static int round_to_precision(int value, int precision)
+{
+   if (value >= 9999)
+       return value;
+
+   int vf = precision * floor(((float) value) / precision);
+
+   return ((value >= (vf + (precision / 2))) ? vf + precision : vf);
+}
  
 static MDSP_BOOL isVisibility( char **visblty, Decoded_METAR *Mptr,
                           int *NDEX )
@@ -1259,41 +1273,33 @@ static MDSP_BOOL isVisibility( char **visblty, Decoded_METAR *Mptr,
       if( antoi(*visblty,
                   strlen(*visblty)) >= 50 &&
                antoi(*visblty,
-                  strlen(*visblty)) <= 800 &&
-              (antoi(*visblty,
-                  strlen(*visblty)) % 50) == 0 )
+                  strlen(*visblty)) <= 800 )
       {
          Mptr->prevail_vsbyM =
-           (float) (antoi(*visblty,
-                       strlen(*visblty)));
+           (float) (round_to_precision(antoi(*visblty,
+                       strlen(*visblty)), 50));
          (*NDEX)++;
          return TRUE;
       }
       else if( antoi(*visblty,
               strlen(*visblty)) >= 800 &&
           antoi(*visblty,
-              strlen(*visblty)) <= 5000 &&
-          (antoi(*visblty,
-                  strlen(*visblty)) % 100) == 0 )
+              strlen(*visblty)) <= 5000 )
       {
          Mptr->prevail_vsbyM =
-               (float) (antoi(*visblty,
-                    strlen(*visblty)));
+               (float) (round_to_precision(antoi(*visblty,
+                    strlen(*visblty)), 100));
          (*NDEX)++;
          return TRUE;
       }
       else if(( antoi(*visblty,
             strlen(*visblty)) >= 5000 &&
           antoi(*visblty,
-            strlen(*visblty)) <= 9999 &&
-          (antoi(*visblty,
-            strlen(*visblty)) % 500) == 0) ||
-           antoi(*visblty,
-            strlen(*visblty)) == 9999 )
+            strlen(*visblty)) <= 9999 ))
       {
          Mptr->prevail_vsbyM =
-                (float) (antoi(*visblty,
-                     strlen(*visblty)));
+                (float) (round_to_precision(antoi(*visblty,
+                     strlen(*visblty)), 500));
          (*NDEX)++;
          return TRUE;
       }
