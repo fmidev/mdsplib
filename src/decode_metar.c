@@ -1083,12 +1083,12 @@ static MDSP_BOOL isMBeforeVis( char **m, Decoded_METAR *Mptr,
 /*                                                                  */
 static int round_to_precision(int value, int precision)
 {
-   if (value >= 9999)
+   if (value == 9999)
        return value;
+   else if (value >= 10000)
+       return 10000;
 
-   int vf = precision * floor(((float) value) / precision);
-
-   return ((value >= (vf + (precision / 2))) ? vf + precision : vf);
+   return precision * floor(((float) value) / precision);
 }
  
 static MDSP_BOOL isVisibility( char **visblty, Decoded_METAR *Mptr,
